@@ -291,14 +291,19 @@ if (year2) year2.textContent = String(new Date().getFullYear());
   }
 
   async function loadAndApply(lang) {
+    const isFile = location.protocol === 'file:';
     if (!cache[lang]) {
-      try {
-        const res = await fetch(`./locales/${lang}.json`, { cache: 'no-store' });
-        if (!res.ok) throw new Error('locale fetch failed');
-        cache[lang] = await res.json();
-      } catch (e) {
-        // Use embedded fallback (works on file://)
+      if (isFile) {
         cache[lang] = EMBED_LOCALES[lang] || EMBED_LOCALES['vi'];
+      } else {
+        try {
+          const res = await fetch(`./locales/${lang}.json`, { cache: 'no-store' });
+          if (!res.ok) throw new Error('locale fetch failed');
+          cache[lang] = await res.json();
+        } catch (e) {
+          // Use embedded fallback if fetch fails
+          cache[lang] = EMBED_LOCALES[lang] || EMBED_LOCALES['vi'];
+        }
       }
     }
     applyMap(cache[lang], lang);
