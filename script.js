@@ -4,6 +4,8 @@
   const saved = localStorage.getItem('theme');
   const isLight = saved ? saved === 'light' : prefersLight;
   if (isLight) document.documentElement.classList.add('light');
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = document.documentElement.classList.contains('light') ? 'Light' : 'Dark';
 })();
 
 // Toggle theme
@@ -12,6 +14,8 @@ document.getElementById('themeToggle')?.addEventListener('click', () => {
   const toLight = !html.classList.contains('light');
   html.classList.toggle('light', toLight);
   localStorage.setItem('theme', toLight ? 'light' : 'dark');
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = toLight ? 'Light' : 'Dark';
 });
 
 // Smooth scroll for internal links
@@ -254,6 +258,11 @@ if (year2) year2.textContent = String(new Date().getFullYear());
   const select = document.getElementById('langSelect');
   if (!select) return;
   const cache = {};
+  // Embedded fallback for file:// usage or fetch failures
+  const EMBED_LOCALES = {
+    vi: {"nav.about":"Thông tin","nav.goal":"Mục tiêu","nav.education":"Học vấn","nav.skills":"Kỹ năng","nav.certs":"Chứng chỉ","nav.projects":"Dự án","nav.others":"Khác","labels.birth":"Ngày sinh:","labels.phone":"Điện thoại:","labels.email":"Email:","labels.address":"Địa chỉ:","sections.goal":"Mục tiêu","content.goal":"Tìm môi trường thân thiện, năng động, có cơ hội học hỏi và thăng tiến. Mong muốn tham gia đội ngũ phát triển sản phẩm thực tế, đóng góp giá trị rõ ràng.","sections.education":"Học vấn","content.education.title":"Đại học PHENIKAA – Công nghệ thông tin (08/2020 – nay)","content.education.note":"Sinh viên năm 4","sections.skills":"Kỹ năng","skills.languages.title":"Ngôn ngữ","skills.languages.items":"Việt, Anh, Nhật; sẵn sàng học thêm khi cần","skills.vcs.title":"Hệ thống quản lý mã","skills.vcs.items":"Git, GitHub, Fork","skills.programming.title":"Lập trình","skills.programming.items":"C, C++, C#, HTML, CSS, JavaScript, Markdown","skills.office.title":"Ứng dụng văn phòng","skills.office.items":"Word, Excel","skills.game.title":"Game engine","skills.game.items":"Unity, RPG Maker","skills.qa.title":"Kiểm thử","skills.qa.items":"Automation test cơ bản","skills.mobile.title":"Ứng dụng di động","skills.mobile.items":"Flutter, Dart","sections.certs":"Chứng chỉ","certs.dlbd.title":"Deep Learning & Big Data","certs.link":"liên kết","certs.toeic.note":"(Listening & Reading)","sections.projects":"Dự án cá nhân","roles.devdes":"Developer, Designer","roles.dev":"Developer","projects.transmodel":"Model phiên dịch (01/2025 – 03/2023)","projects.transmodel.desc":"PyTorch, CUDA; mô hình Seq2Seq; train trên máy cá nhân và Kaggle","projects.healthapp":"App theo dõi sức khỏe (01/2025 – 03/2023)","sections.others":"Các dự án khác","others.tds":"làm việc nhóm qua Fork, Unity 2D","sections.info":"Thông tin","content.info.title":"Ngày sinh: 18/07/2003","content.info.note":"Tôi là Nguyễn Cao Anh, sinh viên công nghệ thông tin với niềm đam mê mạnh mẽ dành cho công nghệ và sáng tạo. Tôi yêu thích việc tìm hiểu cách công nghệ có thể được ứng dụng để giải quyết các vấn đề thực tế, từ đó mang lại những trải nghiệm tốt hơn cho người dùng. Trong quá trình học tập, tôi không chỉ tập trung vào việc nâng cao kỹ năng lập trình và tư duy logic, mà còn rèn luyện khả năng làm việc nhóm, quản lý dự án và tư duy thiết kế. Tôi tin rằng công nghệ không chỉ là công cụ, mà còn là cầu nối giúp con người tạo nên những giá trị mới. Mục tiêu của tôi là trở thành một lập trình viên sáng tạo, không ngừng học hỏi, thử thách bản thân và đóng góp cho sự phát triển của cộng đồng công nghệ.","sections.degrees":"Bằng cấp","degrees.current":"Đang theo học Cử nhân Công nghệ thông tin – PHENIKAA (dự kiến tốt nghiệp)"},
+    en: {"nav.about":"About","nav.goal":"Objective","nav.education":"Education","nav.skills":"Skills","nav.certs":"Certificates","nav.projects":"Projects","nav.others":"Others","labels.birth":"Birth date:","labels.phone":"Phone:","labels.email":"Email:","labels.address":"Address:","sections.goal":"Objective","content.goal":"Seek a friendly, dynamic environment with growth and learning opportunities. Aim to join a real product team and contribute clear value.","sections.education":"Education","content.education.title":"PHENIKAA University – Information Technology (08/2020 – present)","content.education.note":"4th-year student","sections.skills":"Skills","skills.languages.title":"Languages","skills.languages.items":"Vietnamese, English, Japanese; willing to learn more as needed","skills.vcs.title":"Version control","skills.vcs.items":"Git, GitHub, Fork","skills.programming.title":"Programming","skills.programming.items":"C, C++, C#, HTML, CSS, JavaScript, Markdown","skills.office.title":"Office apps","skills.office.items":"Word, Excel","skills.game.title":"Game engines","skills.game.items":"Unity, RPG Maker","skills.qa.title":"Testing","skills.qa.items":"Basic automation testing","skills.mobile.title":"Mobile","skills.mobile.items":"Flutter, Dart","sections.certs":"Certificates","certs.dlbd.title":"Deep Learning & Big Data","certs.link":"link","certs.toeic.note":"(Listening & Reading)","sections.projects":"Personal projects","roles.devdes":"Developer, Designer","roles.dev":"Developer","projects.transmodel":"Translation model (01/2025 – 03/2023)","projects.transmodel.desc":"PyTorch, CUDA; Seq2Seq model; trained on personal machine and Kaggle","projects.healthapp":"Health tracking app (01/2025 – 03/2023)","sections.others":"Other projects","others.tds":"teamwork via Fork, Unity 2D","sections.info":"Information","content.info.title":"Birth date: 18/07/2003","content.info.note":"I am Nguyen Cao Anh, an Information Technology student with a strong passion for technology and creativity. I enjoy exploring how technology can be applied to solve real-world problems and improve user experiences. Throughout my studies, I have focused on building programming skills and logical thinking while also strengthening teamwork, project management, and design thinking. I believe technology is not only a tool but also a bridge that helps people create new value. My goal is to become a creative developer who continuously learns, challenges myself, and contributes to the growth of the tech community.","sections.degrees":"Degrees","degrees.current":"Pursuing B.Sc. in Information Technology – PHENIKAA (expected graduation)"}
+  };
 
   function getKey(el) {
     // prefer data-i18n-key; fallback to legacy data-i18n
@@ -284,11 +293,12 @@ if (year2) year2.textContent = String(new Date().getFullYear());
   async function loadAndApply(lang) {
     if (!cache[lang]) {
       try {
-        const res = await fetch(`./locales/${lang}.json`, { cache: 'no-cache' });
+        const res = await fetch(`./locales/${lang}.json`, { cache: 'no-store' });
+        if (!res.ok) throw new Error('locale fetch failed');
         cache[lang] = await res.json();
       } catch (e) {
-        // fallback to Vietnamese if fetch fails
-        if (lang !== 'vi') return loadAndApply('vi');
+        // Use embedded fallback (works on file://)
+        cache[lang] = EMBED_LOCALES[lang] || EMBED_LOCALES['vi'];
       }
     }
     applyMap(cache[lang], lang);
