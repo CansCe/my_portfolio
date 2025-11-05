@@ -87,6 +87,7 @@ body {
   border-bottom: 1px solid var(--border);
   z-index: 50;
 }
+.site-header.scrolled { box-shadow: 0 6px 20px rgba(0,0,0,.25); background: color-mix(in oklab, var(--bg) 92%, transparent); }
 .header-inner {
   display: flex;
   align-items: center;
@@ -106,6 +107,8 @@ body {
 .nav a { color: var(--text); text-decoration: none; opacity: .9; }
 .nav a:hover { color: var(--primary); }
 .theme-toggle { background: none; border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 10px; cursor: pointer; }
+.nav-controls { display: flex; align-items: center; gap: 10px; }
+.lang-select { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; }
 
 @media (min-width: 820px) {
   .nav ul { display: flex; }
@@ -222,6 +225,17 @@ body {
 .reveal-stagger.in-view > *:nth-child(5) { transition-delay: .25s; }
 .reveal-stagger.in-view > *:nth-child(6) { transition-delay: .3s; }
 .reveal-stagger.in-view > *:nth-child(7) { transition-delay: .35s; }
+
+/* Scroll-to-top button */
+.scroll-top {
+  position: fixed; left: 16px; bottom: 88px; z-index: 59;
+  width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text); cursor: pointer;
+  box-shadow: 0 6px 22px rgba(0,0,0,.35);
+  opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease;
+}
+.scroll-top.show { opacity: 1; pointer-events: auto; }
+.scroll-top:hover { transform: translateY(-2px); }
 
 /* Print */
 @media print {

@@ -27,16 +27,22 @@
           </div>
         </div>
         <nav class="nav" aria-label="Chính">
-          <button class="theme-toggle" id="themeToggle" aria-label="Đổi giao diện">🌓</button>
           <ul>
-            <li><a href="#about">Thông tin</a></li>
-            <li><a href="#goal">Mục tiêu</a></li>
-            <li><a href="#education">Học vấn</a></li>
-            <li><a href="#skills">Kỹ năng</a></li>
-            <li><a href="#certs">Chứng chỉ</a></li>
-            <li><a href="#projects">Dự án</a></li>
-            <li><a href="#others">Khác</a></li>
+            <li><a href="#about" data-i18n="nav.about">Thông tin</a></li>
+            <li><a href="#goal" data-i18n="nav.goal">Mục tiêu</a></li>
+            <li><a href="#education" data-i18n="nav.education">Học vấn</a></li>
+            <li><a href="#skills" data-i18n="nav.skills">Kỹ năng</a></li>
+            <li><a href="#certs" data-i18n="nav.certs">Chứng chỉ</a></li>
+            <li><a href="#projects" data-i18n="nav.projects">Dự án</a></li>
+            <li><a href="#others" data-i18n="nav.others">Khác</a></li>
           </ul>
+          <div class="nav-controls">
+            <select id="langSelect" class="lang-select" aria-label="Language">
+              <option value="vi">Việt</option>
+              <option value="en">English</option>
+            </select>
+            <button class="theme-toggle" id="themeToggle" aria-label="Đổi giao diện">🌓</button>
+          </div>
         </nav>
       </div>
     </header>
@@ -47,13 +53,13 @@
           <h2 class="visually-hidden">Thông tin liên hệ</h2>
           <div class="contact-grid">
             <div>
-              <p><strong>Ngày sinh:</strong> 18/07/2003</p>
-              <p><strong>Điện thoại:</strong> <a href="tel:0356159537">0356159537</a></p>
-              <p><strong>Email:</strong> <a href="mailto:anhnguyencao20@gmail.com">anhnguyencao20@gmail.com</a></p>
+              <p><strong data-i18n="labels.birth">Ngày sinh:</strong> 18/07/2003</p>
+              <p><strong data-i18n="labels.phone">Điện thoại:</strong> <a href="tel:0356159537">0356159537</a></p>
+              <p><strong data-i18n="labels.email">Email:</strong> <a href="mailto:anhnguyencao20@gmail.com">anhnguyencao20@gmail.com</a></p>
             </div>
             <div>
               <p><strong>Facebook:</strong> <a target="_blank" rel="noopener" href="https://facebook.com/anh.nguyencao.3344/">facebook.com/anh.nguyencao.3344/</a></p>
-              <p><strong>Địa chỉ:</strong> 29 La Tinh 1, Đông La, Hoài Đức, Hà Nội</p>
+              <p><strong data-i18n="labels.address">Địa chỉ:</strong> 29 La Tinh 1, Đông La, Hoài Đức, Hà Nội</p>
             </div>
           </div>
         </div>
@@ -61,65 +67,65 @@
 
       <section id="goal" class="section">
         <div class="container">
-          <h2>Mục tiêu</h2>
-          <p>Tìm môi trường thân thiện, năng động, có cơ hội học hỏi và thăng tiến. Mong muốn tham gia đội ngũ phát triển sản phẩm thực tế, đóng góp giá trị rõ ràng.</p>
+          <h2 data-i18n="sections.goal">Mục tiêu</h2>
+          <p data-i18n="content.goal">Tìm môi trường thân thiện, năng động, có cơ hội học hỏi và thăng tiến. Mong muốn tham gia đội ngũ phát triển sản phẩm thực tế, đóng góp giá trị rõ ràng.</p>
         </div>
       </section>
 
       <section id="education" class="section">
         <div class="container">
-          <h2>Học vấn</h2>
+          <h2 data-i18n="sections.education">Học vấn</h2>
           <div class="card">
-            <h3>Đại học PHENIKAA – Công nghệ thông tin <span class="meta">(08/2020 – nay)</span></h3>
-            <p>Sinh viên năm 4</p>
+            <h3 data-i18n="content.education.title">Đại học PHENIKAA – Công nghệ thông tin <span class="meta">(08/2020 – nay)</span></h3>
+            <p data-i18n="content.education.note">Sinh viên năm 4</p>
           </div>
         </div>
       </section>
 
       <section id="skills" class="section">
         <div class="container">
-          <h2>Kỹ năng</h2>
+          <h2 data-i18n="sections.skills">Kỹ năng</h2>
           <div class="grid">
             <div class="card">
-              <h3>Ngôn ngữ</h3>
+              <h3 data-i18n="skills.languages.title">Ngôn ngữ</h3>
               <ul>
-                <li>Việt, Anh, Nhật; sẵn sàng học thêm khi cần</li>
+                <li data-i18n="skills.languages.items">Việt, Anh, Nhật; sẵn sàng học thêm khi cần</li>
               </ul>
             </div>
             <div class="card">
-              <h3>Hệ thống quản lý mã</h3>
+              <h3 data-i18n="skills.vcs.title">Hệ thống quản lý mã</h3>
               <ul>
-                <li>Git, GitHub, Fork</li>
+                <li data-i18n="skills.vcs.items">Git, GitHub, Fork</li>
               </ul>
             </div>
             <div class="card">
-              <h3>Lập trình</h3>
+              <h3 data-i18n="skills.programming.title">Lập trình</h3>
               <ul>
-                <li>C, C++, C#, HTML, CSS, JavaScript, Markdown</li>
+                <li data-i18n="skills.programming.items">C, C++, C#, HTML, CSS, JavaScript, Markdown</li>
               </ul>
             </div>
             <div class="card">
-              <h3>Ứng dụng văn phòng</h3>
+              <h3 data-i18n="skills.office.title">Ứng dụng văn phòng</h3>
               <ul>
-                <li>Word, Excel</li>
+                <li data-i18n="skills.office.items">Word, Excel</li>
               </ul>
             </div>
             <div class="card">
-              <h3>Game engine</h3>
+              <h3 data-i18n="skills.game.title">Game engine</h3>
               <ul>
-                <li>Unity, RPG Maker</li>
+                <li data-i18n="skills.game.items">Unity, RPG Maker</li>
               </ul>
             </div>
             <div class="card">
-              <h3>Kiểm thử</h3>
+              <h3 data-i18n="skills.qa.title">Kiểm thử</h3>
               <ul>
-                <li>Automation test cơ bản</li>
+                <li data-i18n="skills.qa.items">Automation test cơ bản</li>
               </ul>
             </div>
             <div class="card">
-              <h3>Ứng dụng di động</h3>
+              <h3 data-i18n="skills.mobile.title">Ứng dụng di động</h3>
               <ul>
-                <li>Flutter, Dart</li>
+                <li data-i18n="skills.mobile.items">Flutter, Dart</li>
               </ul>
             </div>
           </div>
@@ -128,25 +134,25 @@
 
       <section id="certs" class="section">
         <div class="container">
-          <h2>Chứng chỉ</h2>
+          <h2 data-i18n="sections.certs">Chứng chỉ</h2>
           <ul class="list">
             <li>
-              <strong>Deep Learning & Big Data</strong> – liên kết: 
+              <strong data-i18n="certs.dlbd.title">Deep Learning & Big Data</strong> – <span data-i18n="certs.link">liên kết</span>:
               <a target="_blank" rel="noopener" href="https://linkedin.com/in/anh-nguyễn-cao-646638343/">LinkedIn</a>
             </li>
-            <li><strong>TOEIC 930</strong> (Listening & Reading)</li>
+            <li><strong>TOEIC 930</strong> <span data-i18n="certs.toeic.note">(Listening & Reading)</span></li>
           </ul>
         </div>
       </section>
 
       <section id="projects" class="section">
         <div class="container">
-          <h2>Dự án cá nhân</h2>
+          <h2 data-i18n="sections.projects">Dự án cá nhân</h2>
           <div class="projects">
             <article class="card project">
               <header>
                 <h3>Move Stop Move <span class="meta">(12/2023 – 02/2024)</span></h3>
-                <p class="role">Developer, Designer</p>
+                <p class="role" data-i18n="roles.devdes">Developer, Designer</p>
               </header>
               <p>Unity 3D, C#</p>
             </article>
@@ -154,24 +160,24 @@
             <article class="card project">
               <header>
                 <h3>Bridge Race <span class="meta">(11/2023 – 12/2023)</span></h3>
-                <p class="role">Developer, Designer</p>
+                <p class="role" data-i18n="roles.devdes">Developer, Designer</p>
               </header>
               <p>Unity 3D, C#</p>
             </article>
 
             <article class="card project">
               <header>
-                <h3>Model phiên dịch <span class="meta">(01/2025 – 03/2023)</span></h3>
-                <p class="role">Developer</p>
+                <h3 data-i18n="projects.transmodel">Model phiên dịch <span class="meta">(01/2025 – 03/2023)</span></h3>
+                <p class="role" data-i18n="roles.dev">Developer</p>
               </header>
-              <p>PyTorch, CUDA; mô hình Seq2Seq; train trên máy cá nhân và Kaggle</p>
+              <p data-i18n="projects.transmodel.desc">PyTorch, CUDA; mô hình Seq2Seq; train trên máy cá nhân và Kaggle</p>
               <p>GitHub: <a target="_blank" rel="noopener" href="https://github.com/CansCe/Seq2Seq">github.com/CansCe/Seq2Seq</a></p>
             </article>
 
             <article class="card project">
               <header>
-                <h3>App theo dõi sức khỏe <span class="meta">(01/2025 – 03/2023)</span></h3>
-                <p class="role">Developer</p>
+                <h3 data-i18n="projects.healthapp">App theo dõi sức khỏe <span class="meta">(01/2025 – 03/2023)</span></h3>
+                <p class="role" data-i18n="roles.dev">Developer</p>
               </header>
               <p>Flutter, Dart</p>
             </article>
@@ -181,9 +187,9 @@
 
       <section id="others" class="section">
         <div class="container">
-          <h2>Các dự án khác</h2>
+          <h2 data-i18n="sections.others">Các dự án khác</h2>
           <ul class="list">
-            <li><strong>TopDownShooter – GameDev</strong>: làm việc nhóm qua Fork, Unity 2D</li>
+            <li><strong>TopDownShooter – GameDev</strong>: <span data-i18n="others.tds">làm việc nhóm qua Fork, Unity 2D</span></li>
             <li><strong>Web đọc báo – Frontend & Backend</strong>: Laravel, PHP</li>
           </ul>
         </div>
@@ -227,6 +233,9 @@
         <p class="snake-hint">Mũi tên để di chuyển. Esc để thu gọn.</p>
       </div>
     </div>
+
+    <!-- Scroll to top button -->
+    <button id="scrollTopBtn" class="scroll-top" aria-label="Lên đầu trang">↑</button>
 
     <script src="./script.js"></script>
   </body>
