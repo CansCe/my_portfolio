@@ -29,6 +29,8 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
 
 // Dynamic year
 document.getElementById('year').textContent = String(new Date().getFullYear());
+const year2 = document.getElementById('year2');
+if (year2) year2.textContent = String(new Date().getFullYear());
 
 // Snake popup and game
 (function snakeGame() {
@@ -55,6 +57,13 @@ document.getElementById('year').textContent = String(new Date().getFullYear());
   toggle.addEventListener('click', () => {
     if (widget.classList.contains('open')) closePanel(); else openPanel();
   });
+  // keep widget above bottom bar
+  const updateWidgetOffset = () => {
+    const hasBar = document.documentElement.classList.contains('has-bottom-bar');
+    widget.style.setProperty('--dynamic-offset', hasBar ? '60px' : '0px');
+  };
+  new MutationObserver(updateWidgetOffset).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  updateWidgetOffset();
 
   // Game state
   const ctx = canvas.getContext('2d');
@@ -229,125 +238,165 @@ document.getElementById('year').textContent = String(new Date().getFullYear());
     const scrolled = window.scrollY > 4;
     header?.classList.toggle('scrolled', scrolled);
     if (toTop) toTop.classList.toggle('show', window.scrollY > 300);
+    // bottom bar visibility near page bottom
+    const bottomBar = document.querySelector('.bottom-bar');
+    const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 4;
+    if (bottomBar) bottomBar.classList.toggle('hide', nearBottom);
+    document.documentElement.classList.toggle('has-bottom-bar', bottomBar && !bottomBar.classList.contains('hide'));
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
   toTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 })();
 
-// Language switcher (VI/EN)
-(function i18n() {
+// Language switcher (lazy-load locales)
+(function i18nLazy() {
   const select = document.getElementById('langSelect');
   if (!select) return;
-  const dict = {
-    vi: {
-      'nav.about': 'Thông tin',
-      'nav.goal': 'Mục tiêu',
-      'nav.education': 'Học vấn',
-      'nav.skills': 'Kỹ năng',
-      'nav.certs': 'Chứng chỉ',
-      'nav.projects': 'Dự án',
-      'nav.others': 'Khác',
-      'labels.birth': 'Ngày sinh:',
-      'labels.phone': 'Điện thoại:',
-      'labels.email': 'Email:',
-      'labels.address': 'Địa chỉ:',
-      'sections.goal': 'Mục tiêu',
-      'content.goal': 'Tìm môi trường thân thiện, năng động, có cơ hội học hỏi và thăng tiến. Mong muốn tham gia đội ngũ phát triển sản phẩm thực tế, đóng góp giá trị rõ ràng.',
-      'sections.education': 'Học vấn',
-      'content.education.title': 'Đại học PHENIKAA – Công nghệ thông tin (08/2020 – nay)',
-      'content.education.note': 'Sinh viên năm 4',
-      'sections.skills': 'Kỹ năng',
-      'skills.languages.title': 'Ngôn ngữ',
-      'skills.languages.items': 'Việt, Anh, Nhật; sẵn sàng học thêm khi cần',
-      'skills.vcs.title': 'Hệ thống quản lý mã',
-      'skills.vcs.items': 'Git, GitHub, Fork',
-      'skills.programming.title': 'Lập trình',
-      'skills.programming.items': 'C, C++, C#, HTML, CSS, JavaScript, Markdown',
-      'skills.office.title': 'Ứng dụng văn phòng',
-      'skills.office.items': 'Word, Excel',
-      'skills.game.title': 'Game engine',
-      'skills.game.items': 'Unity, RPG Maker',
-      'skills.qa.title': 'Kiểm thử',
-      'skills.qa.items': 'Automation test cơ bản',
-      'skills.mobile.title': 'Ứng dụng di động',
-      'skills.mobile.items': 'Flutter, Dart',
-      'sections.certs': 'Chứng chỉ',
-      'certs.dlbd.title': 'Deep Learning & Big Data',
-      'certs.link': 'liên kết',
-      'certs.toeic.note': '(Listening & Reading)',
-      'sections.projects': 'Dự án cá nhân',
-      'roles.devdes': 'Developer, Designer',
-      'roles.dev': 'Developer',
-      'projects.transmodel': 'Model phiên dịch (01/2025 – 03/2023)',
-      'projects.transmodel.desc': 'PyTorch, CUDA; mô hình Seq2Seq; train trên máy cá nhân và Kaggle',
-      'projects.healthapp': 'App theo dõi sức khỏe (01/2025 – 03/2023)',
-      'sections.others': 'Các dự án khác',
-      'others.tds': 'làm việc nhóm qua Fork, Unity 2D'
-    },
-    en: {
-      'nav.about': 'About',
-      'nav.goal': 'Objective',
-      'nav.education': 'Education',
-      'nav.skills': 'Skills',
-      'nav.certs': 'Certificates',
-      'nav.projects': 'Projects',
-      'nav.others': 'Others',
-      'labels.birth': 'Birth date:',
-      'labels.phone': 'Phone:',
-      'labels.email': 'Email:',
-      'labels.address': 'Address:',
-      'sections.goal': 'Objective',
-      'content.goal': 'Seek a friendly, dynamic environment with growth and learning opportunities. Aim to join a real product team and contribute clear value.',
-      'sections.education': 'Education',
-      'content.education.title': 'PHENIKAA University – Information Technology (08/2020 – present)',
-      'content.education.note': '4th-year student',
-      'sections.skills': 'Skills',
-      'skills.languages.title': 'Languages',
-      'skills.languages.items': 'Vietnamese, English, Japanese; willing to learn more as needed',
-      'skills.vcs.title': 'Version control',
-      'skills.vcs.items': 'Git, GitHub, Fork',
-      'skills.programming.title': 'Programming',
-      'skills.programming.items': 'C, C++, C#, HTML, CSS, JavaScript, Markdown',
-      'skills.office.title': 'Office apps',
-      'skills.office.items': 'Word, Excel',
-      'skills.game.title': 'Game engines',
-      'skills.game.items': 'Unity, RPG Maker',
-      'skills.qa.title': 'Testing',
-      'skills.qa.items': 'Basic automation testing',
-      'skills.mobile.title': 'Mobile',
-      'skills.mobile.items': 'Flutter, Dart',
-      'sections.certs': 'Certificates',
-      'certs.dlbd.title': 'Deep Learning & Big Data',
-      'certs.link': 'link',
-      'certs.toeic.note': '(Listening & Reading)',
-      'sections.projects': 'Personal projects',
-      'roles.devdes': 'Developer, Designer',
-      'roles.dev': 'Developer',
-      'projects.transmodel': 'Translation model (01/2025 – 03/2023)',
-      'projects.transmodel.desc': 'PyTorch, CUDA; Seq2Seq model; trained on personal machine and Kaggle',
-      'projects.healthapp': 'Health tracking app (01/2025 – 03/2023)',
-      'sections.others': 'Other projects',
-      'others.tds': 'teamwork via Fork, Unity 2D'
-    }
-  };
+  const cache = {};
 
-  const applyLang = (lang) => {
-    const map = dict[lang] || dict.vi;
+  function getKey(el) {
+    // prefer data-i18n-key; fallback to legacy data-i18n
+    return el.getAttribute('data-i18n-key') || el.getAttribute('data-i18n');
+  }
+
+  function applyMap(map, lang) {
     document.documentElement.lang = lang;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.getAttribute('data-i18n');
-      if (key && map[key]) el.innerHTML = map[key];
+    // text content/innerHTML
+    document.querySelectorAll('[data-i18n],[data-i18n-key]').forEach(el => {
+      const key = getKey(el);
+      if (!key) return;
+      const val = map[key];
+      if (val == null) return;
+      el.innerHTML = val;
     });
-  };
+    // attributes mapping, e.g., data-i18n-attr="title,placeholder"
+    document.querySelectorAll('[data-i18n-attr]').forEach(el => {
+      const attrs = el.getAttribute('data-i18n-attr');
+      if (!attrs) return;
+      attrs.split(',').map(s => s.trim()).forEach(attr => {
+        const key = getKey(el) + ':' + attr;
+        if (map[key]) el.setAttribute(attr, map[key]);
+      });
+    });
+  }
 
-  const saved = localStorage.getItem('lang') || 'vi';
-  select.value = saved;
-  applyLang(saved);
+  async function loadAndApply(lang) {
+    if (!cache[lang]) {
+      try {
+        const res = await fetch(`./locales/${lang}.json`, { cache: 'no-cache' });
+        cache[lang] = await res.json();
+      } catch (e) {
+        // fallback to Vietnamese if fetch fails
+        if (lang !== 'vi') return loadAndApply('vi');
+      }
+    }
+    applyMap(cache[lang], lang);
+  }
+
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  const saved = localStorage.getItem('lang');
+  const initial = (urlLang || saved || 'vi').toLowerCase();
+  select.value = initial;
+  loadAndApply(initial);
   select.addEventListener('change', () => {
     const lang = select.value;
     localStorage.setItem('lang', lang);
-    applyLang(lang);
+    const sp = new URLSearchParams(location.search);
+    sp.set('lang', lang);
+    history.replaceState(null, '', `${location.pathname}?${sp.toString()}`);
+    loadAndApply(lang);
+  });
+})();
+
+// Bottom bar Email click-to-copy with mouse popup
+(function copyEmail() {
+  const btn = document.getElementById('copyEmailBtn');
+  if (!btn) return;
+  const email = 'anhnguyencao20@gmail.com';
+
+  function showCopyPop(x, y) {
+    const pop = document.createElement('div');
+    pop.className = 'copy-pop';
+    pop.textContent = 'Copied';
+    document.body.appendChild(pop);
+    const pad = 12;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const cx = Math.min(vw - pad, Math.max(pad, x));
+    const cy = Math.min(vh - pad, Math.max(pad, y));
+    pop.style.left = cx + 'px';
+    pop.style.top = cy + 'px';
+    requestAnimationFrame(() => pop.classList.add('show'));
+    setTimeout(() => {
+      pop.classList.remove('show');
+      setTimeout(() => pop.remove(), 180);
+    }, 900);
+  }
+
+  btn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(email);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = email; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); ta.remove();
+      }
+      const evt = e;
+      showCopyPop(evt.clientX || (window.innerWidth - 20), evt.clientY || (window.innerHeight - 20));
+    } catch (_) {
+      // fallback: navigate to mailto if copy fails
+      window.location.href = 'mailto:' + email;
+    }
+  });
+})();
+
+// Cursor-follow tooltips for skill cards (desktop only)
+(function cursorTooltips() {
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!canHover) return;
+  document.documentElement.classList.add('tooltip-enabled');
+  const tooltip = document.createElement('div');
+  tooltip.className = 'hover-tooltip';
+  document.body.appendChild(tooltip);
+  let active = null;
+
+  function onMove(e) {
+    if (!active) return;
+    const x = e.clientX;
+    const y = e.clientY;
+    // clamp near viewport edges
+    const pad = 12;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const cx = Math.min(vw - pad, Math.max(pad, x));
+    const cy = Math.min(vh - pad, Math.max(pad, y));
+    tooltip.style.left = cx + 'px';
+    tooltip.style.top = cy + 'px';
+  }
+
+  function onEnter(e) {
+    const el = e.currentTarget;
+    const noteHtml = el.getAttribute('data-note-html');
+    const note = noteHtml || el.getAttribute('data-note');
+    if (!note) return;
+    active = e.currentTarget;
+    if (noteHtml) tooltip.innerHTML = note; else tooltip.textContent = note;
+    tooltip.classList.add('show');
+    document.addEventListener('mousemove', onMove);
+  }
+
+  function onLeave() {
+    active = null;
+    tooltip.classList.remove('show');
+    document.removeEventListener('mousemove', onMove);
+  }
+
+  document.querySelectorAll('.card[data-note]').forEach((el) => {
+    el.addEventListener('mouseenter', onEnter);
+    el.addEventListener('mouseleave', onLeave);
   });
 })();
 

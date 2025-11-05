@@ -8,6 +8,7 @@
   --card: #161a22;
   --border: #232838;
   --accent: #9c6bff;
+  --bottom-offset: 0px;
   color-scheme: dark light;
 }
 
@@ -23,6 +24,8 @@ html.light {
   --accent: #8a5bff;
 }
 
+html.has-bottom-bar { --bottom-offset: 60px; }
+
 html, body {
   height: 100%;
 }
@@ -30,7 +33,10 @@ html, body {
 body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  background: var(--bg);
+  background:
+    radial-gradient(1200px 600px at 80% 0%, color-mix(in oklab, var(--primary) 10%, transparent), transparent),
+    radial-gradient(800px 500px at 0% 100%, color-mix(in oklab, var(--accent) 10%, transparent), transparent),
+    var(--bg);
   color: var(--text);
   line-height: 1.6;
 }
@@ -109,7 +115,7 @@ body {
 .nav a:hover { color: var(--primary); }
 .theme-toggle { background: none; border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 10px; cursor: pointer; }
 .nav-controls { display: flex; align-items: center; gap: 10px; }
-.lang-select { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; }
+.lang-select { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
 
 @media (min-width: 820px) {
   .nav ul { display: flex; }
@@ -117,7 +123,7 @@ body {
 
 /* Sections */
 .section { padding: 56px 0; border-bottom: 1px solid var(--border); position: relative; }
-.section h2 { margin-top: 0; font-size: 28px; letter-spacing: .3px; position: relative; display: inline-block; }
+.section h2 { margin-top: 0; font-size: 30px; letter-spacing: .3px; position: relative; display: inline-block; }
 .section h2::after {
   content: ""; position: absolute; left: 0; right: -6px; bottom: -8px; height: 3px;
   background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 3px;
@@ -139,29 +145,44 @@ body {
 
 .card {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid color-mix(in oklab, var(--border), transparent 0%);
+  outline: 1px solid color-mix(in oklab, var(--primary) 10%, var(--border));
   border-radius: 14px;
   padding: 18px;
   box-shadow: 0 2px 8px color-mix(in oklab, #000 15%, transparent);
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 .card:hover { transform: translateY(-2px); border-color: color-mix(in oklab, var(--primary) 35%, var(--border)); box-shadow: 0 6px 20px rgba(0,0,0,.22); }
-
-/* Desktop-only skill tooltips */
+/* Desktop-only JS tooltip enable/disable */
 @media (hover: hover) and (pointer: fine) {
-  .card[data-note] { position: relative; }
-  .card[data-note]::after {
+  html:not(.tooltip-enabled) .card[data-note] { position: relative; }
+  html:not(.tooltip-enabled) .card[data-note]::after {
     content: attr(data-note);
     position: absolute; left: 12px; right: 12px; bottom: calc(100% + 8px);
-    background: var(--surface); color: var(--text);
-    border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px;
-    font-size: 12px; line-height: 1.4; box-shadow: 0 8px 22px rgba(0,0,0,.35);
-    opacity: 0; transform: translateY(6px); pointer-events: none;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 12px;
+    line-height: 1.4;
+    box-shadow: 0 8px 22px rgba(0,0,0,.35);
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
     transition: opacity .16s ease, transform .16s ease;
     white-space: normal;
   }
   .card[data-note]:hover::after { opacity: 1; transform: translateY(0); }
 }
+
+/* Floating tooltip element used by JS */
+.hover-tooltip { position: fixed; z-index: 1000; max-width: 280px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; box-shadow: 0 10px 26px rgba(0,0,0,.35); font-size: 12px; line-height: 1.5; pointer-events: none; opacity: 0; transform: translate(-50%, -12px) scale(.98); transition: opacity .12s ease, transform .12s ease; }
+.hover-tooltip.show { opacity: 1; transform: translate(-50%, -12px) scale(1); }
+
+/* Copy toast */
+.copy-pop { position: fixed; z-index: 1200; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 6px 10px; font-size: 12px; box-shadow: 0 10px 26px rgba(0,0,0,.35); opacity: 0; transform: translate(-50%, -8px) scale(.98); transition: opacity .14s ease, transform .14s ease; pointer-events: none; }
+.copy-pop.show { opacity: 1; transform: translate(-50%, -8px) scale(1); }
 
 .list { padding-left: 18px; }
 .list li { margin-bottom: 8px; }
@@ -181,7 +202,7 @@ body {
 .snake-widget {
   position: fixed;
   left: 16px;
-  bottom: 16px;
+  bottom: calc(16px + var(--bottom-offset, 0px));
   z-index: 60;
 }
 .snake-toggle {
@@ -245,14 +266,24 @@ body {
 
 /* Scroll-to-top button */
 .scroll-top {
-  position: fixed; left: 16px; bottom: 88px; z-index: 59;
+  position: fixed; right: 16px; bottom: 88px; z-index: 70;
   width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--border);
   background: var(--card); color: var(--text); cursor: pointer;
   box-shadow: 0 6px 22px rgba(0,0,0,.35);
   opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease;
 }
+.has-bottom-bar .scroll-top { bottom: calc(88px + var(--bottom-offset)); }
 .scroll-top.show { opacity: 1; pointer-events: auto; }
 .scroll-top:hover { transform: translateY(-2px); }
+
+/* Fixed bottom bar */
+.bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 65; backdrop-filter: saturate(1.2) blur(8px); background: color-mix(in oklab, var(--bg) 86%, transparent); border-top: 1px solid var(--border); transform: translateY(0); transition: transform .2s ease, opacity .2s ease; }
+.bottom-bar.hide { transform: translateY(100%); opacity: 0; }
+.bottom-bar-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; }
+.bottom-links { display: flex; gap: 12px; }
+.bottom-links a { color: var(--muted); text-decoration: none; }
+.bottom-links a:hover { color: var(--primary); }
+.bottom-text { color: var(--muted); font-size: 13px; }
 
 /* Print */
 @media print {

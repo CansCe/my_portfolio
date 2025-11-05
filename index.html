@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>NGUYỄN CAO ANH | Developer</title>
     <meta name="description" content="Portfolio của Nguyễn Cao Anh – Developer. Kỹ năng: C/C++/C#, HTML/CSS/JS, Unity, Flutter. Dự án: Move Stop Move, Bridge Race, Seq2Seq, v.v.">
-    <link rel="icon" href="/nguyen-cao-anh-portfolio/assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
     <meta property="og:title" content="NGUYỄN CAO ANH | Developer">
     <meta property="og:description" content="Kỹ năng đa nền tảng, game dev với Unity, mobile với Flutter, machine learning với PyTorch.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="">
-    <meta property="og:image" content="/nguyen-cao-anh-portfolio/assets/cover.png">
+    <meta property="og:image" content="../nguyen-cao-anh-portfolio/assets/cover.png">
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
@@ -64,7 +64,16 @@
           </div>
         </div>
       </section>
-
+      <section id="info" class="section">
+        <div class="container">
+          <h2 data-i18n="sections.info">Thông tin</h2>
+          <div class="card">
+            <h3 data-i18n="content.info.title">Ngày sinh: 18/07/2003</h3>
+            <p data-i18n="content.info.note">Quê quán: Đông Hưng, Thái Bình
+            <p data-i18n="content.info.note">Tôi là Nguyễn Cao Anh, sinh viên công nghệ thông tin với niềm đam mê mạnh mẽ dành cho công nghệ và sáng tạo. Tôi yêu thích việc tìm hiểu cách công nghệ có thể được ứng dụng để giải quyết các vấn đề thực tế, từ đó mang lại những trải nghiệm tốt hơn cho người dùng. Trong quá trình học tập, tôi không chỉ tập trung vào việc nâng cao kỹ năng lập trình và tư duy logic, mà còn rèn luyện khả năng làm việc nhóm, quản lý dự án và tư duy thiết kế. Tôi tin rằng công nghệ không chỉ là công cụ, mà còn là cầu nối giúp con người tạo nên những giá trị mới. Mục tiêu của tôi là trở thành một lập trình viên sáng tạo, không ngừng học hỏi, thử thách bản thân và đóng góp cho sự phát triển của cộng đồng công nghệ.</p>
+          </div>
+        </div>
+      </section>
       <section id="goal" class="section">
         <div class="container">
           <h2 data-i18n="sections.goal">Mục tiêu</h2>
@@ -92,42 +101,55 @@
                 <li data-i18n="skills.languages.items">Việt, Anh, Nhật; sẵn sàng học thêm khi cần</li>
               </ul>
             </div>
-            <div class="card" data-note="Git flow, Pull Request, Code Review, Fork workflows.">
+            <div class="card" data-note-html="<strong>Git</strong> flow, Pull Request, Code Review, Fork workflows. <a href='https://github.com/CansCe' target='_blank' rel='noopener'>GitHub</a>">
               <h3 data-i18n="skills.vcs.title">Hệ thống quản lý mã</h3>
               <ul>
                 <li data-i18n="skills.vcs.items">Git, GitHub, Fork</li>
               </ul>
             </div>
-            <div class="card" data-note="C/C#, web basics (HTML/CSS/JS), Markdown for docs.">
+            <div class="card" data-note-html="<strong>C/C#</strong>, web basics (<em>HTML/CSS/JS</em>), Markdown cho tài liệu.">
               <h3 data-i18n="skills.programming.title">Lập trình</h3>
               <ul>
                 <li data-i18n="skills.programming.items">C, C++, C#, HTML, CSS, JavaScript, Markdown</li>
               </ul>
             </div>
-            <div class="card" data-note="Soạn thảo tài liệu, bảng tính báo cáo.">
+            <div class="card" data-note-html="Soạn thảo tài liệu, bảng tính báo cáo.">
               <h3 data-i18n="skills.office.title">Ứng dụng văn phòng</h3>
               <ul>
                 <li data-i18n="skills.office.items">Word, Excel</li>
               </ul>
             </div>
-            <div class="card" data-note="Unity 2D/3D, RPG Maker: prototyping & gameplay.">
+            <div class="card" data-note-html="Unity <strong>2D/3D</strong>, RPG Maker: prototyping & gameplay.">
               <h3 data-i18n="skills.game.title">Game engine</h3>
               <ul>
                 <li data-i18n="skills.game.items">Unity, RPG Maker</li>
               </ul>
             </div>
-            <div class="card" data-note="Automation test cơ bản cho UI/API.">
+            <div class="card" data-note-html="Automation test cơ bản cho UI/API.">
               <h3 data-i18n="skills.qa.title">Kiểm thử</h3>
               <ul>
                 <li data-i18n="skills.qa.items">Automation test cơ bản</li>
               </ul>
             </div>
-            <div class="card" data-note="Flutter/Dart: app theo dõi sức khỏe, UI responsvie.">
+            <div class="card" data-note-html="Flutter/Dart: app theo dõi sức khỏe, UI responsive.">
               <h3 data-i18n="skills.mobile.title">Ứng dụng di động</h3>
               <ul>
                 <li data-i18n="skills.mobile.items">Flutter, Dart</li>
               </ul>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="degrees" class="section">
+        <div class="container">
+          <h2 data-i18n="sections.degrees">Bằng cấp</h2>
+          <div class="card">
+            <ul class="list">
+              <li data-i18n="degrees.current">Đang theo học Cử nhân Công nghệ thông tin – PHENIKAA (dự kiến tốt nghiệp)</li>
+              <li><strong data-i18n="certs.dlbd.title">Deep Learning & Big Data</strong> — <a target="_blank" rel="noopener" href="https://linkedin.com/in/anh-nguyễn-cao-646638343/">LinkedIn</a></li>
+              <li><strong>TOEIC 930</strong> <span data-i18n="certs.toeic.note">(Listening & Reading)</span></li>
+            </ul>
           </div>
         </div>
       </section>
@@ -230,12 +252,24 @@
             </div>
           </div>
         </div>
-        <p class="snake-hint">Mũi tên để di chuyển. Esc để thu gọn.</p>
+        <p class="snake-hint">Mũi tên để di chuyển. Space để Pause. Esc để thu gọn.</p>
       </div>
     </div>
 
     <!-- Scroll to top button -->
     <button id="scrollTopBtn" class="scroll-top" aria-label="Lên đầu trang">↑</button>
+
+    <!-- Fixed Bottom Bar -->
+    <div class="bottom-bar" role="contentinfo">
+      <div class="container bottom-bar-inner">
+        <span class="bottom-text">© <span id="year2"></span> Nguyễn Cao Anh</span>
+        <div class="bottom-links">
+          <a href="mailto:anhnguyencao20@gmail.com" id="copyEmailBtn">Email</a>
+          <a target="_blank" rel="noopener" href="https://facebook.com/anh.nguyencao.3344/">Facebook</a>
+          <a target="_blank" rel="noopener" href="https://github.com/CansCe">GitHub</a>
+        </div>
+      </div>
+    </div>
 
     <script src="./script.js"></script>
   </body>

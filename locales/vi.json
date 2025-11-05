@@ -1,0 +1,61 @@
+{
+  "nav.about": "Thông tin",
+  "nav.goal": "Mục tiêu",
+  "nav.education": "Học vấn",
+  "nav.skills": "Kỹ năng",
+  "nav.certs": "Chứng chỉ",
+  "nav.projects": "Dự án",
+  "nav.others": "Khác",
+
+  "labels.birth": "Ngày sinh:",
+  "labels.phone": "Điện thoại:",
+  "labels.email": "Email:",
+  "labels.address": "Địa chỉ:",
+
+  "sections.goal": "Mục tiêu",
+  "content.goal": "Tìm môi trường thân thiện, năng động, có cơ hội học hỏi và thăng tiến. Mong muốn tham gia đội ngũ phát triển sản phẩm thực tế, đóng góp giá trị rõ ràng.",
+
+  "sections.education": "Học vấn",
+  "content.education.title": "Đại học PHENIKAA – Công nghệ thông tin (08/2020 – nay)",
+  "content.education.note": "Sinh viên năm 4",
+
+  "sections.skills": "Kỹ năng",
+  "skills.languages.title": "Ngôn ngữ",
+  "skills.languages.items": "Việt, Anh, Nhật; sẵn sàng học thêm khi cần",
+  "skills.vcs.title": "Hệ thống quản lý mã",
+  "skills.vcs.items": "Git, GitHub, Fork",
+  "skills.programming.title": "Lập trình",
+  "skills.programming.items": "C, C++, C#, HTML, CSS, JavaScript, Markdown",
+  "skills.office.title": "Ứng dụng văn phòng",
+  "skills.office.items": "Word, Excel",
+  "skills.game.title": "Game engine",
+  "skills.game.items": "Unity, RPG Maker",
+  "skills.qa.title": "Kiểm thử",
+  "skills.qa.items": "Automation test cơ bản",
+  "skills.mobile.title": "Ứng dụng di động",
+  "skills.mobile.items": "Flutter, Dart",
+
+  "sections.certs": "Chứng chỉ",
+  "certs.dlbd.title": "Deep Learning & Big Data",
+  "certs.link": "liên kết",
+  "certs.toeic.note": "(Listening & Reading)",
+
+  "sections.projects": "Dự án cá nhân",
+  "roles.devdes": "Developer, Designer",
+  "roles.dev": "Developer",
+  "projects.transmodel": "Model phiên dịch (01/2025 – 03/2023)",
+  "projects.transmodel.desc": "PyTorch, CUDA; mô hình Seq2Seq; train trên máy cá nhân và Kaggle",
+  "projects.healthapp": "App theo dõi sức khỏe (01/2025 – 03/2023)",
+
+  "sections.others": "Các dự án khác",
+  "others.tds": "làm việc nhóm qua Fork, Unity 2D",
+
+  "sections.info": "Thông tin",
+  "content.info.title": "Ngày sinh: 18/07/2003",
+  "content.info.note": "Tôi là Nguyễn Cao Anh, sinh viên công nghệ thông tin với niềm đam mê mạnh mẽ dành cho công nghệ và sáng tạo. Tôi yêu thích việc tìm hiểu cách công nghệ có thể được ứng dụng để giải quyết các vấn đề thực tế, từ đó mang lại những trải nghiệm tốt hơn cho người dùng. Trong quá trình học tập, tôi không chỉ tập trung vào việc nâng cao kỹ năng lập trình và tư duy logic, mà còn rèn luyện khả năng làm việc nhóm, quản lý dự án và tư duy thiết kế. Tôi tin rằng công nghệ không chỉ là công cụ, mà còn là cầu nối giúp con người tạo nên những giá trị mới. Mục tiêu của tôi là trở thành một lập trình viên sáng tạo, không ngừng học hỏi, thử thách bản thân và đóng góp cho sự phát triển của cộng đồng công nghệ.",
+
+  "sections.degrees": "Bằng cấp",
+  "degrees.current": "Đang theo học Cử nhân Công nghệ thông tin – PHENIKAA (dự kiến tốt nghiệp)"
+}
+
+

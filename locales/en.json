@@ -1,0 +1,61 @@
+{
+  "nav.about": "About",
+  "nav.goal": "Objective",
+  "nav.education": "Education",
+  "nav.skills": "Skills",
+  "nav.certs": "Certificates",
+  "nav.projects": "Projects",
+  "nav.others": "Others",
+
+  "labels.birth": "Birth date:",
+  "labels.phone": "Phone:",
+  "labels.email": "Email:",
+  "labels.address": "Address:",
+
+  "sections.goal": "Objective",
+  "content.goal": "Seek a friendly, dynamic environment with growth and learning opportunities. Aim to join a real product team and contribute clear value.",
+
+  "sections.education": "Education",
+  "content.education.title": "PHENIKAA University – Information Technology (08/2020 – present)",
+  "content.education.note": "4th-year student",
+
+  "sections.skills": "Skills",
+  "skills.languages.title": "Languages",
+  "skills.languages.items": "Vietnamese, English, Japanese; willing to learn more as needed",
+  "skills.vcs.title": "Version control",
+  "skills.vcs.items": "Git, GitHub, Fork",
+  "skills.programming.title": "Programming",
+  "skills.programming.items": "C, C++, C#, HTML, CSS, JavaScript, Markdown",
+  "skills.office.title": "Office apps",
+  "skills.office.items": "Word, Excel",
+  "skills.game.title": "Game engines",
+  "skills.game.items": "Unity, RPG Maker",
+  "skills.qa.title": "Testing",
+  "skills.qa.items": "Basic automation testing",
+  "skills.mobile.title": "Mobile",
+  "skills.mobile.items": "Flutter, Dart",
+
+  "sections.certs": "Certificates",
+  "certs.dlbd.title": "Deep Learning & Big Data",
+  "certs.link": "link",
+  "certs.toeic.note": "(Listening & Reading)",
+
+  "sections.projects": "Personal projects",
+  "roles.devdes": "Developer, Designer",
+  "roles.dev": "Developer",
+  "projects.transmodel": "Translation model (01/2025 – 03/2023)",
+  "projects.transmodel.desc": "PyTorch, CUDA; Seq2Seq model; trained on personal machine and Kaggle",
+  "projects.healthapp": "Health tracking app (01/2025 – 03/2023)",
+
+  "sections.others": "Other projects",
+  "others.tds": "teamwork via Fork, Unity 2D",
+
+  "sections.info": "Information",
+  "content.info.title": "Birth date: 18/07/2003",
+  "content.info.note": "I am Nguyen Cao Anh, an Information Technology student with a strong passion for technology and creativity. I enjoy exploring how technology can be applied to solve real-world problems and improve user experiences. Throughout my studies, I have focused on building programming skills and logical thinking while also strengthening teamwork, project management, and design thinking. I believe technology is not only a tool but also a bridge that helps people create new value. My goal is to become a creative developer who continuously learns, challenges myself, and contributes to the growth of the tech community.",
+
+  "sections.degrees": "Degrees",
+  "degrees.current": "Pursuing B.Sc. in Information Technology – PHENIKAA (expected graduation)"
+}
+
+
