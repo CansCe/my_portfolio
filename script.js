@@ -417,3 +417,228 @@ if (year2) year2.textContent = String(new Date().getFullYear());
 
 
 
+// Easter Egg: Hidden hotspot triggers a falling bomb that explodes
+(function bombEasterEgg() {
+  const hotspot = document.getElementById('eggHotspot');
+  if (!hotspot) return;
+
+  function spawnBomb() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Minimal effect: small flash near the corner
+      const flash = document.createElement('div');
+      flash.className = 'explosion';
+      flash.style.left = (window.innerWidth - 40) + 'px';
+      flash.style.top = '40px';
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 700);
+      return;
+    }
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const x = Math.round(0.12 * vw + Math.random() * 0.76 * vw);
+    const bomb = document.createElement('div');
+    bomb.className = 'bomb falling';
+    bomb.style.setProperty('--x', x + 'px');
+    // Duration scaled to viewport height
+    const base = 1.8;
+    const dur = Math.min(2.8, Math.max(1.2, (vh / 900) * base));
+    bomb.style.setProperty('--fall-duration', dur + 's');
+    document.body.appendChild(bomb);
+
+    const onEnd = () => {
+      bomb.removeEventListener('animationend', onEnd);
+      const y = vh - 40; // slightly above bottom
+      bomb.remove();
+      explodeAt(x, y);
+    };
+    bomb.addEventListener('animationend', onEnd);
+  }
+
+  function explodeAt(x, y) {
+    // central boom
+    const boom = document.createElement('div');
+    boom.className = 'explosion';
+    boom.style.left = x + 'px';
+    boom.style.top = y + 'px';
+    document.body.appendChild(boom);
+    setTimeout(() => boom.remove(), 700);
+
+    // particles
+    const colors = ['#ffd166', '#ff6b6b', '#fca311', '#ff9f1c', '#f94144'];
+    const count = 18;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+      const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.8 - 0.4);
+      const dist = 80 + Math.random() * 120;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist * 0.9;
+      p.style.setProperty('--dx', dx + 'px');
+      p.style.setProperty('--dy', dy + 'px');
+      p.style.background = colors[i % colors.length];
+      p.style.boxShadow = '0 0 0 1px rgba(255,255,255,.08)';
+      document.body.appendChild(p);
+      p.addEventListener('animationend', () => p.remove());
+    }
+  }
+
+  hotspot.addEventListener('click', (e) => {
+    e.stopPropagation();
+    spawnBomb();
+  });
+})();
+
+// Admin-click Easter Egg on name
+(function adminClickEasterEgg() {
+  const nameEl = document.querySelector('.brand-text .name');
+  if (!nameEl) return;
+
+  let totalClicks = 0;
+  let started = false;
+  let remaining = 5;
+
+  function showHint(msg, x, y) {
+    const div = document.createElement('div');
+    div.className = 'click-pop';
+    div.textContent = msg;
+    document.body.appendChild(div);
+    const pad = 14;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const cx = Math.min(vw - pad, Math.max(pad, x));
+    const cy = Math.min(vh - pad, Math.max(pad, y));
+    div.style.left = cx + 'px';
+    div.style.top = cy + 'px';
+    requestAnimationFrame(() => div.classList.add('show'));
+    setTimeout(() => { div.classList.remove('show'); setTimeout(() => div.remove(), 160); }, 900);
+  }
+
+  function showAdminModal(onOk) {
+    const backdrop = document.createElement('div');
+    backdrop.className = 'admin-modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="admin-modal" role="dialog" aria-modal="true">
+        <h3 class="title">Congrats, you are now an ADMIN</h3>
+        <button class="btn" id="adminOkBtn">OkAy</button>
+      </div>`;
+    document.body.appendChild(backdrop);
+    requestAnimationFrame(() => backdrop.classList.add('show'));
+    const ok = backdrop.querySelector('#adminOkBtn');
+    ok?.addEventListener('click', () => {
+      backdrop.classList.remove('show');
+      setTimeout(() => backdrop.remove(), 180);
+      onOk?.();
+    });
+  }
+
+  function doJumpscare() {
+    const ov = document.createElement('div');
+    ov.className = 'jumpscare-overlay';
+    document.body.appendChild(ov);
+    requestAnimationFrame(() => ov.classList.add('show'));
+    setTimeout(() => {
+      const img = document.createElement('img');
+      img.src = './assets/giphy.gif';
+      img.alt = '';
+      ov.appendChild(img);
+    }, 500);
+    // Dismiss on click or after 6s
+    const cleanup = () => { ov.classList.remove('show'); setTimeout(() => ov.remove(), 220); };
+    ov.addEventListener('click', cleanup, { once: true });
+    setTimeout(cleanup, 6000);
+  }
+
+  nameEl.addEventListener('click', (e) => {
+    totalClicks += 1;
+    if (!started && totalClicks > 3) {
+      started = true; remaining = 5;
+    }
+    if (!started) return;
+
+    if (remaining > 0) {
+      showHint(`${remaining} more clicks to become admin`, e.clientX, e.clientY);
+      remaining -= 1;
+    }
+    if (remaining === 0) {
+      // Prevent multiple triggers on same render frame
+      remaining = -1;
+      showAdminModal(() => doJumpscare());
+    }
+  });
+})();
+
+// 30s timed hint to guide users to click the name
+(function timedNameHint() {
+  const nameEl = document.querySelector('.brand-text .name');
+  if (!nameEl) return;
+
+  let pointerEl = null;
+  let shown = false;
+  let reminderId = null;
+  let timer = null;
+
+  function placePointer() {
+    if (!pointerEl) return;
+    const r = nameEl.getBoundingClientRect();
+    // place pointer up-left of the name
+    const x = r.left - 80;
+    const y = Math.max(8, r.top - 40);
+    pointerEl.style.left = x + 'px';
+    pointerEl.style.top = y + 'px';
+  }
+
+  function showPointer() {
+    if (shown) return;
+    shown = true;
+    pointerEl = document.createElement('div');
+    pointerEl.className = 'name-pointer';
+    pointerEl.innerHTML = '<span class="arrow">↗</span><span class="label">Click this</span>';
+    document.body.appendChild(pointerEl);
+    placePointer();
+    requestAnimationFrame(() => pointerEl.classList.add('show'));
+    window.addEventListener('resize', placePointer);
+    window.addEventListener('scroll', placePointer, { passive: true });
+    // gentle re-emphasis every ~10s until clicked
+    reminderId = setInterval(() => {
+      if (!pointerEl) return;
+      pointerEl.classList.remove('show');
+      setTimeout(() => pointerEl && pointerEl.classList.add('show'), 80);
+    }, 10000);
+  }
+
+  function hidePointer() {
+    if (!pointerEl) return;
+    pointerEl.classList.remove('show');
+    const el = pointerEl; pointerEl = null;
+    setTimeout(() => el.remove(), 160);
+    window.removeEventListener('resize', placePointer);
+    window.removeEventListener('scroll', placePointer);
+    if (reminderId) { clearInterval(reminderId); reminderId = null; }
+  }
+
+  function showMiniPop(msg, x, y) {
+    const div = document.createElement('div');
+    div.className = 'click-pop';
+    div.textContent = msg;
+    document.body.appendChild(div);
+    const pad = 14;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const cx = Math.min(vw - pad, Math.max(pad, x));
+    const cy = Math.min(vh - pad, Math.max(pad, y));
+    div.style.left = cx + 'px';
+    div.style.top = cy + 'px';
+    requestAnimationFrame(() => div.classList.add('show'));
+    setTimeout(() => { div.classList.remove('show'); setTimeout(() => div.remove(), 160); }, 900);
+  }
+
+  timer = setTimeout(showPointer, 30000);
+
+  nameEl.addEventListener('click', (e) => {
+    if (!shown) return; // only react if pointer was shown
+    if (timer) { clearTimeout(timer); timer = null; }
+    hidePointer();
+    showMiniPop('2 more times', e.clientX, e.clientY);
+  });
+})();
