@@ -48,19 +48,36 @@
 
     <main id="main">
       <section id="about" class="section hero">
-        <div class="container">
-          <h2 class="visually-hidden">Thông tin liên hệ</h2>
-          <div class="contact-grid">
-            <div>
-              <p><strong data-i18n="labels.birth">Ngày sinh:</strong> 18/07/2003</p>
-              <p><strong data-i18n="labels.phone">Điện thoại:</strong> <a href="tel:0356159537">0356159537</a></p>
-              <p><strong data-i18n="labels.email">Email:</strong> <a href="mailto:anhnguyencao20@gmail.com">anhnguyencao20@gmail.com</a></p>
-            </div>
-            <div>
-              <p><strong>Facebook:</strong> <a target="_blank" rel="noopener" href="https://facebook.com/anh.nguyencao.3344/">facebook.com/anh.nguyencao.3344/</a></p>
-              <p><strong data-i18n="labels.address">Địa chỉ:</strong> 29 La Tinh 1, Đông La, Hoài Đức, Hà Nội</p>
+        <div class="container hero-inner">
+          <div class="hero-main">
+            <p class="eyebrow" data-i18n="hero.eyebrow">Lập trình · Game · Mobile · ML</p>
+            <h2 class="hero-title">NGUYỄN CAO ANH</h2>
+            <p class="hero-role" data-i18n="hero.tagline">Xây dựng game, ứng dụng di động và mô hình ML — từ ý tưởng đến sản phẩm hoàn chỉnh.</p>
+            <span class="status-chip" data-i18n="hero.available">Sẵn sàng cho công việc</span>
+            <div class="hero-ctas">
+              <a class="btn-primary" href="mailto:anhnguyencao20@gmail.com" data-i18n="cta.email">Liên hệ</a>
+              <a class="btn-ghost" href="#projects" data-i18n="cta.projects">Xem dự án</a>
+              <a class="btn-ghost" target="_blank" rel="noopener" href="https://github.com/CansCe" data-i18n="cta.github">GitHub</a>
             </div>
           </div>
+          <aside class="title-block" aria-label="Contact">
+            <div class="tb-head">
+              <span class="tb-title" data-i18n="titleblock.title">HỒ SƠ</span>
+              <span class="tb-sheet">SHEET 01</span>
+            </div>
+            <dl class="tb-grid">
+              <dt data-i18n="labels.birth">Ngày sinh:</dt>
+              <dd>18/07/2003</dd>
+              <dt data-i18n="labels.phone">Điện thoại:</dt>
+              <dd><a href="tel:0356159537">0356159537</a></dd>
+              <dt data-i18n="labels.email">Email:</dt>
+              <dd><a href="mailto:anhnguyencao20@gmail.com">anhnguyencao20@gmail.com</a></dd>
+              <dt>Facebook:</dt>
+              <dd><a target="_blank" rel="noopener" href="https://facebook.com/anh.nguyencao.3344/">anh.nguyencao.3344</a></dd>
+              <dt data-i18n="labels.address">Địa chỉ:</dt>
+              <dd>29 La Tinh 1, Đông La, Hoài Đức, Hà Nội</dd>
+            </dl>
+          </aside>
         </div>
       </section>
       <section id="info" class="section">
@@ -94,43 +111,43 @@
         <div class="container">
           <h2 data-i18n="sections.skills">Kỹ năng</h2>
           <div class="grid">
-            <div class="card" data-note="Vietnamese, English, Japanese; luôn sẵn sàng học thêm.">
+            <div class="card" data-note-key="skills.languages.note">
               <h3 data-i18n="skills.languages.title">Ngôn ngữ</h3>
               <ul>
                 <li data-i18n="skills.languages.items">Việt, Anh, Nhật; sẵn sàng học thêm khi cần</li>
               </ul>
             </div>
-            <div class="card" data-note-html="<strong>Git</strong> flow, Pull Request, Code Review, Fork workflows. <a href='https://github.com/CansCe' target='_blank' rel='noopener'>GitHub</a>">
+            <div class="card" data-note-key="skills.vcs.note">
               <h3 data-i18n="skills.vcs.title">Hệ thống quản lý mã</h3>
               <ul>
                 <li data-i18n="skills.vcs.items">Git, GitHub, Fork</li>
               </ul>
             </div>
-            <div class="card" data-note-html="<strong>C/C#</strong>, web basics (<em>HTML/CSS/JS</em>), Markdown cho tài liệu.">
+            <div class="card" data-note-key="skills.programming.note">
               <h3 data-i18n="skills.programming.title">Lập trình</h3>
               <ul>
                 <li data-i18n="skills.programming.items">C, C++, C#, HTML, CSS, JavaScript, Markdown</li>
               </ul>
             </div>
-            <div class="card" data-note-html="Soạn thảo tài liệu, bảng tính báo cáo.">
+            <div class="card" data-note-key="skills.office.note">
               <h3 data-i18n="skills.office.title">Ứng dụng văn phòng</h3>
               <ul>
                 <li data-i18n="skills.office.items">Word, Excel</li>
               </ul>
             </div>
-            <div class="card" data-note-html="Unity <strong>2D/3D</strong>, RPG Maker: prototyping & gameplay.">
+            <div class="card" data-note-key="skills.game.note">
               <h3 data-i18n="skills.game.title">Game engine</h3>
               <ul>
                 <li data-i18n="skills.game.items">Unity, RPG Maker</li>
               </ul>
             </div>
-            <div class="card" data-note-html="Automation test cơ bản cho UI/API.">
+            <div class="card" data-note-key="skills.qa.note">
               <h3 data-i18n="skills.qa.title">Kiểm thử</h3>
               <ul>
                 <li data-i18n="skills.qa.items">Automation test cơ bản</li>
               </ul>
             </div>
-            <div class="card" data-note-html="Flutter/Dart: app theo dõi sức khỏe, UI responsive.">
+            <div class="card" data-note-key="skills.mobile.note">
               <h3 data-i18n="skills.mobile.title">Ứng dụng di động</h3>
               <ul>
                 <li data-i18n="skills.mobile.items">Flutter, Dart</li>
@@ -214,8 +231,8 @@
         <div class="container">
           <h2 data-i18n="sections.others">Các dự án khác</h2>
           <ul class="list">
-            <li><strong>TopDownShooter – GameDev</strong>: <span data-i18n="others.tds">làm việc nhóm qua Fork, Unity 2D <a target="_blank" rel="noopener" href="https://github.com/CansCe/TopDownShooter">https://github.com/CansCe/TopDownShooter</a></span></li>
-            <li><strong>Web đọc báo – Frontend & Backend</strong>: Laravel, PHP</li>
+            <li><strong data-i18n="others.tds.title">TopDownShooter – GameDev</strong>: <span data-i18n="others.tds">làm việc nhóm qua Fork, Unity 2D <a target="_blank" rel="noopener" href="https://github.com/CansCe/TopDownShooter">https://github.com/CansCe/TopDownShooter</a></span></li>
+            <li><strong data-i18n="others.news.title">Web đọc báo – Frontend & Backend</strong>: Laravel, PHP</li>
           </ul>
         </div>
       </section>
@@ -234,15 +251,15 @@
 
     <!-- Snake Popup -->
     <div class="snake-widget" id="snakeWidget" aria-live="polite">
-      <button class="snake-toggle" id="snakeToggle" aria-expanded="false" aria-controls="snakePanel" title="Chơi Snake" aria-label="Play a game">Play a game</button>
-      <div class="snake-panel" id="snakePanel" role="dialog" aria-label="Trò chơi Snake" aria-modal="false">
+      <button class="snake-toggle" id="snakeToggle" aria-expanded="false" aria-controls="snakePanel" data-i18n="snake.toggle" data-i18n-attr="title:snake.toggle.title,aria-label:snake.toggle">Play a game</button>
+      <div class="snake-panel" id="snakePanel" role="dialog" data-i18n-attr="aria-label:snake.panel.aria" aria-label="Trò chơi Snake" aria-modal="false">
         <header class="snake-header">
-          <strong>Snake</strong>
+          <strong data-i18n="snake.title">Snake</strong>
           <div class="snake-controls">
             <span class="snake-score" id="snakeScore">0</span>
             <span class="snake-high" id="snakeHigh">HS: 0</span>
-            <button class="snake-btn" id="snakeRestart" title="Chơi lại">↻</button>
-            <button class="snake-btn" id="snakePause" title="Tạm dừng/tiếp tục">⏯</button>
+            <button class="snake-btn" id="snakeRestart" data-i18n-attr="title:snake.restart.title" title="Chơi lại">↻</button>
+            <button class="snake-btn" id="snakePause" data-i18n-attr="title:snake.pause.title" title="Tạm dừng/tiếp tục">⏯</button>
           </div>
         </header>
         <div class="snake-canvas-wrap">
@@ -250,17 +267,17 @@
           <div class="snake-overlay" id="snakeOverlay" aria-hidden="true">
             <div class="snake-overlay-inner">
               <div class="arrows">↑ ← ↓ →</div>
-              <div class="tip">Dùng phím mũi tên để di chuyển</div>
-              <div class="tip-sub">Space: tạm dừng • Esc: thu gọn</div>
+              <div class="tip" data-i18n="snake.overlay.tip">Dùng phím mũi tên để di chuyển</div>
+              <div class="tip-sub" data-i18n="snake.overlay.sub">Space: tạm dừng • Esc: thu gọn</div>
             </div>
           </div>
         </div>
-        <p class="snake-hint">Mũi tên để di chuyển. Space để Pause. Esc để thu gọn.</p>
+        <p class="snake-hint" data-i18n="snake.hint">Mũi tên để di chuyển. Space để Pause. Esc để thu gọn.</p>
       </div>
     </div>
 
     <!-- Scroll to top button -->
-    <button id="scrollTopBtn" class="scroll-top" aria-label="Lên đầu trang">↑</button>
+    <button id="scrollTopBtn" class="scroll-top" data-i18n-attr="aria-label:scrolltop.aria" aria-label="Lên đầu trang">↑</button>
 
     <!-- Fixed Bottom Bar -->
     <div class="bottom-bar" role="contentinfo">
@@ -277,6 +294,7 @@
     <!-- Invisible Easter Egg Hotspot (top-right corner) -->
     <div id="eggHotspot" class="egg-hotspot" aria-hidden="true" title=""></div>
 
+    <script src="./locales/locales.js"></script>
     <script src="./script.js"></script>
     <!-- Vercel Analytics (Web Analytics + Speed Insights) with CDN fallback -->
     <script defer src="/_vercel/insights/script.js" onerror="this.onerror=null;this.src='https://cdn.vercel-insights.com/v1/script.js'"></script>
