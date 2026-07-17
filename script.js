@@ -1,12 +1,98 @@
+// i18n core — single source of truth is window.LOCALES (locales/locales.js).
+// Exposes window.i18n so both static markup and runtime JS resolve the same
+// strings: t(key) reads the current language (falling back to vi, then the raw
+// key); setLang() switches; onChange() lets dynamic UI re-render on switch.
+window.i18n = (function i18nCore() {
+  const LOCALES = window.LOCALES || { vi: {}, en: {} };
+  const listeners = [];
+  let lang = 'vi';
+
+  function t(key, vars) {
+    const map = LOCALES[lang] || {};
+    let val = map[key];
+    if (val == null) val = (LOCALES.vi || {})[key];
+    if (val == null) val = key;
+    if (vars) {
+      Object.keys(vars).forEach(name => {
+        val = val.replace('{' + name + '}', vars[name]);
+      });
+    }
+    return val;
+  }
+
+  function apply() {
+    const map = LOCALES[lang] || {};
+    document.documentElement.lang = lang;
+
+    // Element text/innerHTML: data-i18n (legacy) or data-i18n-key.
+    document.querySelectorAll('[data-i18n],[data-i18n-key]').forEach(el => {
+      const key = el.getAttribute('data-i18n-key') || el.getAttribute('data-i18n');
+      if (key && map[key] != null) el.innerHTML = map[key];
+    });
+
+    // Attributes: data-i18n-attr="attr:key,attr2:key2"
+    // e.g. data-i18n-attr="aria-label:snake.toggle,title:snake.toggle.title"
+    document.querySelectorAll('[data-i18n-attr]').forEach(el => {
+      el.getAttribute('data-i18n-attr').split(',').forEach(pair => {
+        const idx = pair.indexOf(':');
+        if (idx < 0) return;
+        const attr = pair.slice(0, idx).trim();
+        const key = pair.slice(idx + 1).trim();
+        if (attr && key && map[key] != null) el.setAttribute(attr, map[key]);
+      });
+    });
+
+    listeners.forEach(fn => { try { fn(lang); } catch (_) {} });
+  }
+
+  function setLang(next) {
+    lang = (next || 'vi').toLowerCase();
+    if (!LOCALES[lang]) lang = 'vi';
+    apply();
+  }
+
+  function onChange(fn) { if (typeof fn === 'function') listeners.push(fn); }
+
+  // Initial language: ?lang= > saved > vi
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  const savedLang = localStorage.getItem('lang');
+  lang = (urlLang || savedLang || 'vi').toLowerCase();
+  if (!LOCALES[lang]) lang = 'vi';
+
+  const select = document.getElementById('langSelect');
+  if (select) {
+    select.value = lang;
+    select.addEventListener('change', () => {
+      const next = select.value;
+      localStorage.setItem('lang', next);
+      const sp = new URLSearchParams(location.search);
+      sp.set('lang', next);
+      history.replaceState(null, '', `${location.pathname}?${sp.toString()}`);
+      setLang(next);
+    });
+  }
+
+  apply(); // translate the static page on load
+
+  return { t, apply, setLang, onChange, get lang() { return lang; } };
+})();
+
 // Theme persistence
+function updateThemeToggle() {
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  const isLight = document.documentElement.classList.contains('light');
+  btn.textContent = window.i18n.t(isLight ? 'theme.light' : 'theme.dark');
+}
 (function () {
   const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
   const saved = localStorage.getItem('theme');
   const isLight = saved ? saved === 'light' : prefersLight;
   if (isLight) document.documentElement.classList.add('light');
-  const btn = document.getElementById('themeToggle');
-  if (btn) btn.textContent = document.documentElement.classList.contains('light') ? 'Light' : 'Dark';
+  updateThemeToggle();
 })();
+// Keep the toggle label translated when the language changes.
+window.i18n.onChange(updateThemeToggle);
 
 // Toggle theme
 document.getElementById('themeToggle')?.addEventListener('click', () => {
@@ -14,8 +100,7 @@ document.getElementById('themeToggle')?.addEventListener('click', () => {
   const toLight = !html.classList.contains('light');
   html.classList.toggle('light', toLight);
   localStorage.setItem('theme', toLight ? 'light' : 'dark');
-  const btn = document.getElementById('themeToggle');
-  if (btn) btn.textContent = toLight ? 'Light' : 'Dark';
+  updateThemeToggle();
 });
 
 // Smooth scroll for internal links
@@ -48,6 +133,17 @@ if (year2) year2.textContent = String(new Date().getFullYear());
   const pauseBtn = document.getElementById('snakePause');
   const overlay = document.getElementById('snakeOverlay');
   if (!widget || !toggle || !panel || !canvas) return;
+
+  // Show the stored high score with the translated prefix before the first
+  // game starts, and keep the prefix correct if the language changes.
+  const renderHigh = () => {
+    if (!highEl) return;
+    const stored = Number(localStorage.getItem('snakeHighScore') || '0');
+    const hs = Number.isFinite(stored) ? stored : 0;
+    highEl.textContent = `${window.i18n.t('snake.high.prefix')} ${hs}`;
+  };
+  renderHigh();
+  window.i18n.onChange(renderHigh);
 
   // Popup toggle
   const closePanel = () => {
@@ -93,7 +189,7 @@ if (year2) year2.textContent = String(new Date().getFullYear());
     scoreEl.textContent = String(score);
     const savedHigh = Number(localStorage.getItem('snakeHighScore') || '0');
     highScore = Number.isFinite(savedHigh) ? savedHigh : 0;
-    if (highEl) highEl.textContent = `HS: ${highScore}`;
+    if (highEl) highEl.textContent = `${window.i18n.t('snake.high.prefix')} ${highScore}`;
     loop();
     showOverlay(true);
   }
@@ -144,7 +240,7 @@ if (year2) year2.textContent = String(new Date().getFullYear());
       if (score > highScore) {
         highScore = score;
         localStorage.setItem('snakeHighScore', String(highScore));
-        if (highEl) highEl.textContent = `HS: ${highScore}`;
+        if (highEl) highEl.textContent = `${window.i18n.t('snake.high.prefix')} ${highScore}`;
       }
       food = spawnFood();
     } else {
@@ -253,76 +349,8 @@ if (year2) year2.textContent = String(new Date().getFullYear());
   toTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 })();
 
-// Language switcher (lazy-load locales)
-(function i18nLazy() {
-  const select = document.getElementById('langSelect');
-  if (!select) return;
-  const cache = {};
-  // Embedded fallback for file:// usage or fetch failures
-  const EMBED_LOCALES = {
-    vi: {"nav.about":"Thông tin","nav.goal":"Mục tiêu","nav.education":"Học vấn","nav.skills":"Kỹ năng","nav.certs":"Chứng chỉ","nav.projects":"Dự án","nav.others":"Khác","labels.birth":"Ngày sinh:","labels.phone":"Điện thoại:","labels.email":"Email:","labels.address":"Địa chỉ:","sections.goal":"Mục tiêu","content.goal":"Tìm môi trường thân thiện, năng động, có cơ hội học hỏi và thăng tiến. Mong muốn tham gia đội ngũ phát triển sản phẩm thực tế, đóng góp giá trị rõ ràng.","sections.education":"Học vấn","content.education.title":"Đại học PHENIKAA – Công nghệ thông tin (08/2020 – nay)","content.education.note":"Sinh viên năm 4","sections.skills":"Kỹ năng","skills.languages.title":"Ngôn ngữ","skills.languages.items":"Việt, Anh, Nhật; sẵn sàng học thêm khi cần","skills.vcs.title":"Hệ thống quản lý mã","skills.vcs.items":"Git, GitHub, Fork","skills.programming.title":"Lập trình","skills.programming.items":"C, C++, C#, HTML, CSS, JavaScript, Markdown","skills.office.title":"Ứng dụng văn phòng","skills.office.items":"Word, Excel","skills.game.title":"Game engine","skills.game.items":"Unity, RPG Maker","skills.qa.title":"Kiểm thử","skills.qa.items":"Automation test cơ bản","skills.mobile.title":"Ứng dụng di động","skills.mobile.items":"Flutter, Dart","sections.certs":"Chứng chỉ","certs.dlbd.title":"Deep Learning & Big Data","certs.link":"liên kết","certs.toeic.note":"(Listening & Reading)","sections.projects":"Dự án cá nhân","roles.devdes":"Developer, Designer","roles.dev":"Developer","projects.transmodel":"Model phiên dịch (01/2025 – 03/2023)","projects.transmodel.desc":"PyTorch, CUDA; mô hình Seq2Seq; train trên máy cá nhân và Kaggle","projects.healthapp":"App theo dõi sức khỏe (01/2025 – 03/2023)","sections.others":"Các dự án khác","others.tds":"làm việc nhóm qua Fork, Unity 2D","sections.info":"Thông tin","content.info.title":"Ngày sinh: 18/07/2003","content.info.note":"Tôi là Nguyễn Cao Anh, sinh viên công nghệ thông tin với niềm đam mê mạnh mẽ dành cho công nghệ và sáng tạo. Tôi yêu thích việc tìm hiểu cách công nghệ có thể được ứng dụng để giải quyết các vấn đề thực tế, từ đó mang lại những trải nghiệm tốt hơn cho người dùng. Trong quá trình học tập, tôi không chỉ tập trung vào việc nâng cao kỹ năng lập trình và tư duy logic, mà còn rèn luyện khả năng làm việc nhóm, quản lý dự án và tư duy thiết kế. Tôi tin rằng công nghệ không chỉ là công cụ, mà còn là cầu nối giúp con người tạo nên những giá trị mới. Mục tiêu của tôi là trở thành một lập trình viên sáng tạo, không ngừng học hỏi, thử thách bản thân và đóng góp cho sự phát triển của cộng đồng công nghệ.","sections.degrees":"Bằng cấp","degrees.current":"Đang theo học Cử nhân Công nghệ thông tin – PHENIKAA (dự kiến tốt nghiệp)"},
-    en: {"nav.about":"About","nav.goal":"Objective","nav.education":"Education","nav.skills":"Skills","nav.certs":"Certificates","nav.projects":"Projects","nav.others":"Others","labels.birth":"Birth date:","labels.phone":"Phone:","labels.email":"Email:","labels.address":"Address:","sections.goal":"Objective","content.goal":"Seek a friendly, dynamic environment with growth and learning opportunities. Aim to join a real product team and contribute clear value.","sections.education":"Education","content.education.title":"PHENIKAA University – Information Technology (08/2020 – present)","content.education.note":"4th-year student","sections.skills":"Skills","skills.languages.title":"Languages","skills.languages.items":"Vietnamese, English, Japanese; willing to learn more as needed","skills.vcs.title":"Version control","skills.vcs.items":"Git, GitHub, Fork","skills.programming.title":"Programming","skills.programming.items":"C, C++, C#, HTML, CSS, JavaScript, Markdown","skills.office.title":"Office apps","skills.office.items":"Word, Excel","skills.game.title":"Game engines","skills.game.items":"Unity, RPG Maker","skills.qa.title":"Testing","skills.qa.items":"Basic automation testing","skills.mobile.title":"Mobile","skills.mobile.items":"Flutter, Dart","sections.certs":"Certificates","certs.dlbd.title":"Deep Learning & Big Data","certs.link":"link","certs.toeic.note":"(Listening & Reading)","sections.projects":"Personal projects","roles.devdes":"Developer, Designer","roles.dev":"Developer","projects.transmodel":"Translation model (01/2025 – 03/2023)","projects.transmodel.desc":"PyTorch, CUDA; Seq2Seq model; trained on personal machine and Kaggle","projects.healthapp":"Health tracking app (01/2025 – 03/2023)","sections.others":"Other projects","others.tds":"teamwork via Fork, Unity 2D","sections.info":"Information","content.info.title":"Birth date: 18/07/2003","content.info.note":"I am Nguyen Cao Anh, an Information Technology student with a strong passion for technology and creativity. I enjoy exploring how technology can be applied to solve real-world problems and improve user experiences. Throughout my studies, I have focused on building programming skills and logical thinking while also strengthening teamwork, project management, and design thinking. I believe technology is not only a tool but also a bridge that helps people create new value. My goal is to become a creative developer who continuously learns, challenges myself, and contributes to the growth of the tech community.","sections.degrees":"Degrees","degrees.current":"Pursuing B.Sc. in Information Technology – PHENIKAA (expected graduation)"}
-  };
-
-  function getKey(el) {
-    // prefer data-i18n-key; fallback to legacy data-i18n
-    return el.getAttribute('data-i18n-key') || el.getAttribute('data-i18n');
-  }
-
-  function applyMap(map, lang) {
-    document.documentElement.lang = lang;
-    // text content/innerHTML
-    document.querySelectorAll('[data-i18n],[data-i18n-key]').forEach(el => {
-      const key = getKey(el);
-      if (!key) return;
-      const val = map[key];
-      if (val == null) return;
-      el.innerHTML = val;
-    });
-    // attributes mapping, e.g., data-i18n-attr="title,placeholder"
-    document.querySelectorAll('[data-i18n-attr]').forEach(el => {
-      const attrs = el.getAttribute('data-i18n-attr');
-      if (!attrs) return;
-      attrs.split(',').map(s => s.trim()).forEach(attr => {
-        const key = getKey(el) + ':' + attr;
-        if (map[key]) el.setAttribute(attr, map[key]);
-      });
-    });
-  }
-
-  async function loadAndApply(lang) {
-    const isFile = location.protocol === 'file:';
-    if (!cache[lang]) {
-      if (isFile) {
-        cache[lang] = EMBED_LOCALES[lang] || EMBED_LOCALES['vi'];
-      } else {
-        try {
-          const res = await fetch(`./locales/${lang}.json`, { cache: 'no-store' });
-          if (!res.ok) throw new Error('locale fetch failed');
-          cache[lang] = await res.json();
-        } catch (e) {
-          // Use embedded fallback if fetch fails
-          cache[lang] = EMBED_LOCALES[lang] || EMBED_LOCALES['vi'];
-        }
-      }
-    }
-    applyMap(cache[lang], lang);
-  }
-
-  const urlLang = new URLSearchParams(location.search).get('lang');
-  const saved = localStorage.getItem('lang');
-  const initial = (urlLang || saved || 'vi').toLowerCase();
-  select.value = initial;
-  loadAndApply(initial);
-  select.addEventListener('change', () => {
-    const lang = select.value;
-    localStorage.setItem('lang', lang);
-    const sp = new URLSearchParams(location.search);
-    sp.set('lang', lang);
-    history.replaceState(null, '', `${location.pathname}?${sp.toString()}`);
-    loadAndApply(lang);
-  });
-})();
+// (i18n core is defined at the top of this file so it is ready before the
+// theme toggle and other modules call window.i18n.t.)
 
 // Bottom bar Email click-to-copy with mouse popup
 (function copyEmail() {
@@ -333,7 +361,7 @@ if (year2) year2.textContent = String(new Date().getFullYear());
   function showCopyPop(x, y) {
     const pop = document.createElement('div');
     pop.className = 'copy-pop';
-    pop.textContent = 'Copied';
+    pop.textContent = window.i18n.t('copy.done');
     document.body.appendChild(pop);
     const pad = 12;
     const vw = window.innerWidth;
@@ -394,11 +422,11 @@ if (year2) year2.textContent = String(new Date().getFullYear());
 
   function onEnter(e) {
     const el = e.currentTarget;
-    const noteHtml = el.getAttribute('data-note-html');
-    const note = noteHtml || el.getAttribute('data-note');
-    if (!note) return;
-    active = e.currentTarget;
-    if (noteHtml) tooltip.innerHTML = note; else tooltip.textContent = note;
+    const key = el.getAttribute('data-note-key');
+    if (!key) return;
+    active = el;
+    // Notes are trusted author content (may include <strong>/<em>/<a>).
+    tooltip.innerHTML = window.i18n.t(key);
     tooltip.classList.add('show');
     document.addEventListener('mousemove', onMove);
   }
@@ -409,7 +437,7 @@ if (year2) year2.textContent = String(new Date().getFullYear());
     document.removeEventListener('mousemove', onMove);
   }
 
-  document.querySelectorAll('.card[data-note]').forEach((el) => {
+  document.querySelectorAll('.card[data-note-key]').forEach((el) => {
     el.addEventListener('mouseenter', onEnter);
     el.addEventListener('mouseleave', onLeave);
   });
@@ -501,6 +529,8 @@ if (year2) year2.textContent = String(new Date().getFullYear());
   let remaining = 5;
 
   function showHint(msg, x, y) {
+    // Only one hint bubble at a time — clear any that's still showing.
+    document.querySelectorAll('.click-pop').forEach((n) => n.remove());
     const div = document.createElement('div');
     div.className = 'click-pop';
     div.textContent = msg;
@@ -516,12 +546,14 @@ if (year2) year2.textContent = String(new Date().getFullYear());
   }
 
   function showAdminModal(onOk) {
+    // The modal supersedes any lingering hint bubble.
+    document.querySelectorAll('.click-pop').forEach((n) => n.remove());
     const backdrop = document.createElement('div');
     backdrop.className = 'admin-modal-backdrop';
     backdrop.innerHTML = `
       <div class="admin-modal" role="dialog" aria-modal="true">
-        <h3 class="title">Congrats, you are now an ADMIN</h3>
-        <button class="btn" id="adminOkBtn">OkAy</button>
+        <h3 class="title">${window.i18n.t('admin.congrats')}</h3>
+        <button class="btn" id="adminOkBtn">${window.i18n.t('admin.ok')}</button>
       </div>`;
     document.body.appendChild(backdrop);
     requestAnimationFrame(() => backdrop.classList.add('show'));
@@ -558,7 +590,7 @@ if (year2) year2.textContent = String(new Date().getFullYear());
     if (!started) return;
 
     if (remaining > 0) {
-      showHint(`${remaining} more clicks to become admin`, e.clientX, e.clientY);
+      showHint(window.i18n.t('admin.clicksRemaining', { n: remaining }), e.clientX, e.clientY);
       remaining -= 1;
     }
     if (remaining === 0) {
@@ -594,7 +626,7 @@ if (year2) year2.textContent = String(new Date().getFullYear());
     shown = true;
     pointerEl = document.createElement('div');
     pointerEl.className = 'name-pointer';
-    pointerEl.innerHTML = '<span class="arrow">↗</span><span class="label">Click this</span>';
+    pointerEl.innerHTML = `<span class="arrow">↗</span><span class="label">${window.i18n.t('hint.clickThis')}</span>`;
     document.body.appendChild(pointerEl);
     placePointer();
     requestAnimationFrame(() => pointerEl.classList.add('show'));
@@ -619,6 +651,8 @@ if (year2) year2.textContent = String(new Date().getFullYear());
   }
 
   function showMiniPop(msg, x, y) {
+    // Only one hint bubble at a time — clear any that's still showing.
+    document.querySelectorAll('.click-pop').forEach((n) => n.remove());
     const div = document.createElement('div');
     div.className = 'click-pop';
     div.textContent = msg;
@@ -639,6 +673,6 @@ if (year2) year2.textContent = String(new Date().getFullYear());
     if (!shown) return; // only react if pointer was shown
     if (timer) { clearTimeout(timer); timer = null; }
     hidePointer();
-    showMiniPop('2 more times', e.clientX, e.clientY);
+    showMiniPop(window.i18n.t('hint.twoMore'), e.clientX, e.clientY);
   });
 })();
